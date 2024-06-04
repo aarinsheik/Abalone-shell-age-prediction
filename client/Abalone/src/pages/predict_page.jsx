@@ -3,16 +3,16 @@ import { useState } from 'react';
 import shellImage from '../assets/abalone_shells_img2.jpg'
 import Popup from '../components/popup'
 import { usePopup , PopupProvider } from '../context/popupContext'
-// import axios from 'axios';
+import axios from 'axios';
 
 
 const Predict_page = () => {
 
-    // importing parameters from contextAPI :
+    // importing parameters from contextAPI : 
     const {isPopupVisible, showPopup } = usePopup();
 
     // object of features given by users :
-    const [formData, setFormData] = useState({
+    const [featureData, setFeatureData] = useState({
       gender: '',
       shell_weight: '',
       viscera_weight: '',
@@ -22,11 +22,14 @@ const Predict_page = () => {
       height: '',
       length: ''
     });
+
+    //the predicted age 
+    const [age, setAge] = useState(null);
   
     // function to update featureObject :
     const handleChange = (e) => {
-      setFormData({
-        ...formData,
+      setFeatureData({
+        ...featureData,
         [e.target.name]: e.target.value
       });
     }
@@ -35,17 +38,16 @@ const Predict_page = () => {
     const onSubmitFunc = (event)=>{
       event.preventDefault();
 
-      // const postFormData = async()=>{
-      //   try {
-      //     const response = await axios.post('http://localhost:5000/predict', formData);
-      //     setPrediction(response.data.prediction);
-      //   } catch (error) {
-      //     console.error('Error making prediction:', error);
-      //   }
-      // }
+      axios.post('http://127.0.0.1:5000/send_features', featureData)
+      .then((response) => {
+        setAge(response.data.age);
+        console.log(response.data)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-      // postFormData()
-
+      console.log(age)
       showPopup()
     };
 
@@ -64,27 +66,27 @@ const Predict_page = () => {
             
           <div className="flex-1 mb-4">
             <label htmlFor="contact-time" className="text-3xl mb-3 block font-medium">Gender</label>
-            <select name="gender" onChange={handleChange} value={formData.gender} id="contact-time" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm">
+            <select name="gender" onChange={handleChange} value={featureData.gender} id="contact-time" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm">
               <option value="" disabled selected>Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="infant">Infant</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
+              <option value="I">Infant</option>
             </select>
           </div>
 
             <div className="flex-1 mb-4">
               <label htmlFor="name" className="text-3xl mb-3 block font-medium ">Length</label>
-              <input name="length" onChange={handleChange} value={formData.length} type="number" inputmode="numeric" id="name" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter your name" />
+              <input name="length" onChange={handleChange} value={featureData.length} type="number" inputmode="numeric" id="name" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mm'" />
             </div>
 
             <div className="flex-1 mb-4">
               <label htmlFor="email" className="text-3xl mb-3 block font-medium ">Height</label>
-              <input name="height" onChange={handleChange} value={formData.height} type="number" inputmode="numeric" id="email" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter your email" />
+              <input name="height" onChange={handleChange} value={featureData.height} type="number" inputmode="numeric" id="email" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mm'" />
             </div>
 
             <div className="flex-1 mb-4">
               <label htmlFor="phone" className="text-3xl mb-3 block font-medium">Diameter</label>
-              <input name="diameter" onChange={handleChange} value={formData.diameter} type="number" inputmode="numeric" id="phone" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter phone number" />
+              <input name="diameter" onChange={handleChange} value={featureData.diameter} type="number" inputmode="numeric" id="phone" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mm'" />
             </div>
 
           </div>
@@ -94,22 +96,22 @@ const Predict_page = () => {
 
             <div className="flex-1 mb-4">
               <label htmlFor="name" className="text-3xl mb-3 block font-medium ">Whole Weight</label>
-              <input name="whole_weight" onChange={handleChange} value={formData.whole_weight} type="number" inputmode="numeric" id="name" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter your name" />
+              <input name="whole_weight" onChange={handleChange} value={featureData.whole_weight} type="number" inputmode="numeric" id="name" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mg'" />
             </div>
 
             <div className="flex-1 mb-4">
               <label htmlFor="email" className="text-3xl mb-3 block font-medium ">Shucked Weight</label>
-              <input name="shucked_weight" onChange={handleChange} value={formData.shucked_weight} type="number" inputmode="numeric" id="email" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter your email" />
+              <input name="shucked_weight" onChange={handleChange} value={featureData.shucked_weight} type="number" inputmode="numeric" id="email" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mg'" />
             </div>
 
             <div className="flex-1 mb-4">
               <label htmlFor="phone" className="text-3xl mb-3 block font-medium">Viscera Weight</label>
-              <input name="viscera_weight" onChange={handleChange} value={formData.viscera_weight} type="number" inputmode="numeric" id="phone" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter phone number" />
+              <input name="viscera_weight" onChange={handleChange} value={featureData.viscera_weight} type="number" inputmode="numeric" id="phone" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mg'" />
             </div>
 
             <div className="flex-1 mb-4">
               <label htmlFor="contact-time" className="text-3xl mb-3 block font-medium">Shell Weight</label>
-              <input name="shell_weight" onChange={handleChange} value={formData.shell_weight} type="number" inputmode="numeric" id="contact-time" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="Enter best contact time" />
+              <input name="shell_weight" onChange={handleChange} value={featureData.shell_weight} type="number" inputmode="numeric" id="contact-time" className="w-full p-2.5 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-indigo-500 shadow-custom-sm" placeholder="In 'mg'" />
             </div>              
 
           </div>
