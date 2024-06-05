@@ -1,16 +1,20 @@
-from flask import Flask , request , jsonify , render_template 
+from flask import Flask , request , jsonify 
 import pickle
 import pandas as pd
-import sklearn.preprocessing as LabelEncoder
+from sklearn.preprocessing import LabelEncoder
+from flask_cors import CORS, cross_origin
 
 # create flask app
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 # load the model 
 with open('..\Model\/best_model.pkl', 'rb') as f:
     abalone_model = pickle.load(f)
 
 @app.route("/hello")
+@cross_origin()
 def hello():
     print('hello, This abalone shell age predicting server running : printed in server')
     response =  jsonify('hello, This abalone shell age predicting server running')
@@ -18,10 +22,14 @@ def hello():
     response.headers.add('Access-Control-Allow-Origin','*')
     return response
 
-@app.route("/send_features", methods=["POST"])
+@app.route("/sendFeatures", methods=["POST"])
+@cross_origin()
 def send_features():
-    data = request.get_json()
-    gender = data['gender']
+
+    print('hello')
+    data = request.json
+
+    gender = data.get('gender')
     length = data['length']
     diameter = data['diameter']
     height = data['height']
@@ -48,17 +56,18 @@ def send_features():
 
     predict_df = pd.DataFrame(DFdata)
 
+    print('\n\nRecieved Data from User :\n\n',predict_df,'\n\n')
+
     # Encoding categorical variables 
     le = LabelEncoder()
     predict_df['Sex'] = le.fit_transform( predict_df['Sex'])
 
     # Make prediction
     prediction = abalone_model.predict(predict_df)
-    print(prediction[0])
+    print('Predicted age by the model :',prediction[0],'\n\n')
     
     response =  jsonify({'age': prediction[0]})
-
-    response.headers.add('Access-Control-Allow-Origin','*')
+    # response.headers.add('Access-Control-Allow-Origin','*')
     print(response)
     return response
 

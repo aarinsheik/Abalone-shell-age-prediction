@@ -24,7 +24,7 @@ const Predict_page = () => {
     });
 
     //the predicted age 
-    const [age, setAge] = useState(null);
+    const [age, setAge] = useState(-1.1);
   
     // function to update featureObject :
     const handleChange = (e) => {
@@ -38,10 +38,10 @@ const Predict_page = () => {
     const onSubmitFunc = (event)=>{
       event.preventDefault();
 
-      axios.post('http://127.0.0.1:5000/send_features', featureData)
+      axios.post('http://127.0.0.1:5000/sendFeatures', featureData)
       .then((response) => {
-        setAge(response.data.age);
-        console.log(response.data)
+        pred_age = response.data.age
+        setAge(pred_age);
       })
       .catch((error) => {
         console.error(error);
