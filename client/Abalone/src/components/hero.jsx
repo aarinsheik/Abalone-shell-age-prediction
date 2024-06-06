@@ -11,11 +11,11 @@ const hero = () => {
             <div className='h-[57%] w-[50%] absolute top-[31%] left-[12%] bg-[#E8E3DE] z-0 rounded-xl'></div>
         </div>
         
-        <div className='flex-1 '>
+        <div className='flex-1 flex flex-col justify-start'>
             
-            <h1 className='text-[40px] font-[500] font-rubik leading-[50px] mt-36'>Lets Predict the <br/><span className='text-[#a17655]'>Age of Abalone Shells !</span></h1>
+            <h1 className='text-[40px] font-[500] font-rubik leading-[50px] mt-28'>Lets Predict the <br/><span className='text-[#a17655]'>Age of Abalone Shells !</span></h1>
 
-            <p className='text-[19px] text-justify w-[700px] mt-8'>Abalone shells are marine mollusk exoskeletons, known for their vibrant, iridescent nacre. Highly valued for jewelry and decoration,
+            <p className='text-[19px] text-justify w-[650px] mt-8'>Abalone shells are marine mollusk exoskeletons, known for their vibrant, iridescent nacre. Highly valued for jewelry and decoration,
              they also hold cultural significance, symbolizing healing and protection in various traditions around the world. Our Abalone Age Prediction ML model leverages the CatBoost
               Gradient algorithm, utilizing features like Length, Diameter, Height, and various weights (Whole, Shucked, Viscera, Shell) to accurately estimate the age of abalones.</p>
             

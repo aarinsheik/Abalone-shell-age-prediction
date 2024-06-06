@@ -4,6 +4,7 @@ import HomePage from './pages/Home_page'
 import PredictPage from "./pages/predict_page"
 import AboutPage from "./pages/about_page"
 import { Route , createBrowserRouter , RouterProvider } from 'react-router-dom'
+import { RecoilRoot } from 'recoil';
 
 
 
@@ -28,7 +29,9 @@ function App() {
 
   return(
     <>
-      <RouterProvider router={router_H}></RouterProvider>
+      <RecoilRoot>
+        <RouterProvider router={router_H}></RouterProvider>
+      </RecoilRoot>
     </>
   )
 
